@@ -78,23 +78,26 @@ def print_attendance_list(attendance_list, title="Attendance Records"):
 
 
 def print_trainer_summary(members):
-    """Show members grouped by trainer, including their schedule."""
+    """Show trainer → assigned members, excluding expired members."""
     print_title("Trainer Assignment Summary")
-    if not members:
-        print("No members found.")
-        return
 
     trainers = {}
     for m in members:
-        t = m["trainer"]
-        trainers.setdefault(t, []).append(m)
+        if m["status"].lower() == "expired":
+            continue
+        trainer = m["trainer"]
+        trainers.setdefault(trainer, []).append(m)
+
+    if not trainers:
+        print("No active or pending members assigned.")
+        return
 
     for trainer, t_members in trainers.items():
         print(f"\nTrainer: {trainer}")
         for m in t_members:
             print(
                 f"  - {m['member_id']} | {m['name']} "
-                f"({m['membership_type']}, {m['schedule']})"
+                f"({m['membership_type']}, {m['schedule']}, Status: {m['status']})"
             )
 
 
@@ -102,3 +105,41 @@ def print_financial_summary(total_amount, count):
     print_title("Financial Summary")
     print(f"Number of payments: {count}")
     print(f"Total amount      : {total_amount:.2f}")
+
+
+def print_busiest_day_report(busiest_day, stats_dict):
+    print_title("Busiest Day of the Week (Attendance)")
+    if not stats_dict:
+        print("No attendance data available.")
+        return
+
+    print("Visits per day:")
+    for day, count in stats_dict.items():
+        print(f"  {day}: {count} visit(s)")
+
+    if busiest_day:
+        print("\nOverall busiest day:", busiest_day)
+
+
+def print_revenue_by_membership_type(revenue_dict):
+    print_title("Revenue by Membership Type")
+    if not revenue_dict:
+        print("No payment data available.")
+        return
+
+    for mtype, total in revenue_dict.items():
+        print(f"{mtype:10} : {total:.2f}")
+
+def print_expiry_alert(expiring_members, days):
+    """
+    Print a short alert box for memberships expiring soon.
+    """
+    print_title(f"Automatic Alert: Memberships expiring within {days} day(s)")
+    if not expiring_members:
+        print("No memberships are expiring in this period.")
+        return
+
+    print(f"{len(expiring_members)} member(s) found:")
+    for m in expiring_members:
+        print(f"- {m['member_id']} | {m['name']} | End Date: {m['end_date']}")
+

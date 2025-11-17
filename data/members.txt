@@ -1,4 +1,4 @@
-M001,Joel Kho,25,0123456789,Monthly,2025-08-01,2025-08-31,active,Trainer Alex,MonWedFri 18-20
+M001,Joel Kho,25,0123456789,Monthly,2025-08-01,2025-11-20,expired,Trainer Alex,MonWedFri 18-20
 M002,Amira Tan,22,0129988776,Quarterly,2025-07-15,2025-10-14,active,Trainer Bella,TueThu 19-21
 M003,Daniel Lee,30,0135566778,Monthly,2025-09-05,2025-10-04,pending,Trainer Alex,SatSun 10-12
 M004,Siti Rahman,28,0161122334,Monthly,2025-05-01,2025-05-31,expired,Trainer Chris,MonWed 7-9

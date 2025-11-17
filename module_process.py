@@ -1,4 +1,7 @@
 # BUSINESS LOGIC FUNCTIONS
+from datetime import datetime, timedelta
+from collections import Counter
+
 
 def generate_new_id(prefix, existing_items, key_name):
     """Generate new ID like M001, P002 based on existing list."""
@@ -70,17 +73,38 @@ def get_pending_members(members):
     return [m for m in members if m["status"].lower() == "pending"]
 
 
-def get_members_expiring_before_date(members, cutoff_date):
+def get_members_expiring_within_days(members, days_from_today):
     """
-    Return members whose membership end_date is <= cutoff_date.
+    Return members whose membership end_date is within the next
+    'days_from_today' days from today's date.
 
-    Dates are in YYYY-MM-DD so string comparison works.
+    Uses datetime for real date comparison (researched feature).
     """
     result = []
+    today = datetime.today().date()
+    cutoff = today + timedelta(days=days_from_today)
+
     for m in members:
-        if m["end_date"] <= cutoff_date:
+        try:
+            end_date = datetime.strptime(m["end_date"], "%Y-%m-%d").date()
+        except ValueError:
+            # Invalid date format in data, skip safely
+            continue
+
+        if today <= end_date <= cutoff:
             result.append(m)
+
     return result
+
+def cancel_membership(members, member_id):
+    """Cancel a membership by setting status to expired."""
+    member = find_member(members, member_id)
+    if not member:
+        return None
+
+    member["status"] = "expired"
+    return member
+
 
 
 # ---------- PAYMENT FUNCTIONS ----------
@@ -125,6 +149,17 @@ def get_payments_in_month(payments, year, month):
                 filtered.append(p)
     return filtered
 
+def get_revenue_per_membership_type(payments):
+    """
+    Calculate total revenue grouped by membership_type
+    (e.g. Monthly, Quarterly, Yearly).
+    """
+    totals = {}
+    for p in payments:
+        mtype = p["membership_type"]
+        totals[mtype] = totals.get(mtype, 0.0) + p["amount"]
+    return totals
+
 
 # ---------- ATTENDANCE FUNCTIONS ----------
 
@@ -160,12 +195,48 @@ def get_attendance_in_range(attendance_list, start_date, end_date):
             result.append(a)
     return result
 
+def get_busiest_day_of_week(attendance_list):
+    """
+    Analyse attendance records and return the weekday name with the highest visits.
+
+    Uses datetime + Counter to compute gym traffic by day of week.
+    """
+    if not attendance_list:
+        return None, {}
+
+    weekday_counter = Counter()
+    # Map Python weekday() number to name
+    weekday_names = ["Monday", "Tuesday", "Wednesday",
+                     "Thursday", "Friday", "Saturday", "Sunday"]
+
+    for a in attendance_list:
+        try:
+            date_obj = datetime.strptime(a["date"], "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        weekday_index = date_obj.weekday()  # 0=Mon, 6=Sun
+        weekday_counter[weekday_names[weekday_index]] += 1
+
+    if not weekday_counter:
+        return None, {}
+
+    busiest_day, _ = weekday_counter.most_common(1)[0]
+    return busiest_day, dict(weekday_counter)
+
 
 # ---------- TRAINER SUMMARY ----------
 
 def group_members_by_trainer(members):
+    """Return trainer → list of active/pending members."""
     trainers = {}
+
     for m in members:
-        t = m["trainer"]
-        trainers.setdefault(t, []).append(m)
+        # Exclude expired members
+        if m["status"].lower() == "expired":
+            continue
+
+        trainer = m["trainer"]
+        trainers.setdefault(trainer, []).append(m)
+
     return trainers
+
