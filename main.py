@@ -290,17 +290,16 @@ def reports_menu(members, payments, attendance):
 
 
 def main():
-    # Load existing data (resume previous state)
+    # Load existing data 
     members = load_members_from_file()
     payments = load_payments_from_file()
     attendance = load_attendance_from_file()
 
-    # ---------- AUTOMATIC EXPIRY ALERT HERE ----------
-    DAYS_AHEAD = 7  # alert window
+    # Expiry alert (if have)
+    DAYS_AHEAD = 7 
     expiring_soon = get_members_expiring_within_days(members, DAYS_AHEAD)
-    if expiring_soon:  # only show alert if there is at least one member
+    if expiring_soon:  
         print_expiry_alert(expiring_soon, DAYS_AHEAD)
-    # -------------------------------------------------
 
     while True:
         print_main_menu()

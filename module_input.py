@@ -57,8 +57,6 @@ def input_menu_choice(prompt, options):
         print("Invalid choice. Please try again.")
 
 
-# ---------- SPECIFIC INPUT HELPERS ----------
-
 def input_member_details(membership_types):
     """Collect details for a new member."""
     print("\n--- New Member Registration ---")
@@ -66,7 +64,6 @@ def input_member_details(membership_types):
     age = input_int_in_range("Age: ", 10, 100)
     phone = input_non_empty("Phone number: ")
 
-    # Choose membership type
     print("Membership Types:")
     for idx, mtype in enumerate(membership_types, start=1):
         print(f"{idx}. {mtype}")

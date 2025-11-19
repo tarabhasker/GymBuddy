@@ -1,4 +1,3 @@
-# BUSINESS LOGIC FUNCTIONS
 from datetime import datetime, timedelta
 from collections import Counter
 
@@ -88,7 +87,6 @@ def get_members_expiring_within_days(members, days_from_today):
         try:
             end_date = datetime.strptime(m["end_date"], "%Y-%m-%d").date()
         except ValueError:
-            # Invalid date format in data, skip safely
             continue
 
         if today <= end_date <= cutoff:
@@ -125,9 +123,7 @@ def record_payment(members, payments, member_id, payment_data):
     }
     payments.append(payment)
 
-    # Update member status to active (paid)
     member["status"] = "active"
-    # Optionally update membership_type based on payment
     member["membership_type"] = payment_data["membership_type"]
 
     return payment, member
@@ -141,7 +137,6 @@ def get_payments_in_month(payments, year, month):
     """Return payments in a given YYYY and MM (strings)."""
     filtered = []
     for p in payments:
-        # date_paid format: YYYY-MM-DD
         parts = p["date_paid"].split("-")
         if len(parts) == 3:
             y, m, _ = parts
@@ -205,7 +200,6 @@ def get_busiest_day_of_week(attendance_list):
         return None, {}
 
     weekday_counter = Counter()
-    # Map Python weekday() number to name
     weekday_names = ["Monday", "Tuesday", "Wednesday",
                      "Thursday", "Friday", "Saturday", "Sunday"]
 
@@ -231,7 +225,6 @@ def group_members_by_trainer(members):
     trainers = {}
 
     for m in members:
-        # Exclude expired members
         if m["status"].lower() == "expired":
             continue
 

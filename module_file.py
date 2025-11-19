@@ -28,10 +28,8 @@ def load_members_from_file():
             if not line:
                 continue
             fields = line.split(",")
-            # member_id, name, age, phone, membership_type, start_date,
-            # end_date, status, trainer, schedule
             if len(fields) < 10:
-                continue  # skip invalid/old lines
+                continue 
             member = {
                 "member_id": fields[0],
                 "name": fields[1],
