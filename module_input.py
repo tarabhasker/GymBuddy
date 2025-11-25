@@ -1,5 +1,7 @@
+# input helpers
+
 def input_non_empty(prompt):
-    """Ask until user enters non-empty string."""
+    # make sure input is not empty
     while True:
         value = input(prompt).strip()
         if value:
@@ -8,7 +10,7 @@ def input_non_empty(prompt):
 
 
 def input_int_in_range(prompt, min_value, max_value):
-    """Ask until user enters int within range."""
+    # get integer inside a range
     while True:
         value = input(prompt).strip()
         if value.isdigit():
@@ -19,7 +21,7 @@ def input_int_in_range(prompt, min_value, max_value):
 
 
 def input_positive_float(prompt):
-    """Ask until user enters positive float."""
+    # get positive number
     while True:
         value = input(prompt).strip()
         try:
@@ -32,10 +34,7 @@ def input_positive_float(prompt):
 
 
 def input_date(prompt):
-    """
-    Ask for a date in format YYYY-MM-DD.
-    (We won't parse it as datetime to keep things simple.)
-    """
+    # simple date input (YYYY-MM-DD)
     while True:
         date_str = input(prompt).strip()
         parts = date_str.split("-")
@@ -43,13 +42,11 @@ def input_date(prompt):
             year, month, day = parts
             if len(year) == 4 and len(month) == 2 and len(day) == 2:
                 return date_str
-        print("Invalid date format. Please use YYYY-MM-DD (e.g. 2025-10-17).")
+        print("Invalid date format. Please use YYYY-MM-DD.")
 
 
 def input_menu_choice(prompt, options):
-    """
-    Ask for menu choice. options is a list of valid strings like ["1","2","3"].
-    """
+    # menu choice validation
     while True:
         choice = input(prompt).strip()
         if choice in options:
@@ -58,12 +55,13 @@ def input_menu_choice(prompt, options):
 
 
 def input_member_details(membership_types):
-    """Collect details for a new member."""
+    # get details for new member
     print("\n--- New Member Registration ---")
     name = input_non_empty("Name: ")
     age = input_int_in_range("Age: ", 10, 100)
     phone = input_non_empty("Phone number: ")
 
+    # membership type
     print("Membership Types:")
     for idx, mtype in enumerate(membership_types, start=1):
         print(f"{idx}. {mtype}")
@@ -77,9 +75,7 @@ def input_member_details(membership_types):
     end_date = input_date("End date (YYYY-MM-DD): ")
 
     trainer = input_non_empty("Assigned Trainer: ")
-    schedule = input_non_empty(
-        "Work schedule / preferred session (e.g. Mon/Wed/Fri 6–8pm): "
-    )
+    schedule = input_non_empty("Work schedule (e.g. Mon/Wed/Fri 6-8pm): ")
 
     return {
         "name": name,
@@ -94,12 +90,13 @@ def input_member_details(membership_types):
 
 
 def input_payment_details():
-    """Collect details for a new payment."""
+    # get payment info
     print("\n--- Record Payment ---")
     date_paid = input_date("Date paid (YYYY-MM-DD): ")
     amount = input_positive_float("Amount: ")
     method = input_non_empty("Payment method (Cash/Card/Online): ")
     membership_type = input_non_empty("Membership type paid for: ")
+
     return {
         "date_paid": date_paid,
         "amount": amount,
@@ -109,11 +106,12 @@ def input_payment_details():
 
 
 def input_attendance_details():
-    """Collect details for attendance record."""
+    # get attendance info
     print("\n--- Record Attendance ---")
     date = input_date("Date (YYYY-MM-DD): ")
     checkin = input_non_empty("Check-in time (e.g. 18:30): ")
     checkout = input_non_empty("Check-out time (e.g. 19:30): ")
+
     return {
         "date": date,
         "checkin": checkin,

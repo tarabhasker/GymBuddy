@@ -1,10 +1,14 @@
+# output functions
+
 def print_title(text):
+    # title box
     print("\n" + "=" * 50)
     print(text)
     print("=" * 50)
 
 
 def print_main_menu():
+    # main menu
     print_title("Gym Membership Management System")
     print("1. Member Management")
     print("2. Payment Management")
@@ -14,7 +18,7 @@ def print_main_menu():
 
 
 def print_member(member):
-    """Print details of a single member."""
+    # show individual member details
     print("-" * 50)
     print(f"Member ID   : {member['member_id']}")
     print(f"Name        : {member['name']}")
@@ -30,6 +34,7 @@ def print_member(member):
 
 
 def print_member_list(members, title="Members"):
+    # list all members
     print_title(title)
     if not members:
         print("No members found.")
@@ -39,6 +44,7 @@ def print_member_list(members, title="Members"):
 
 
 def print_payment(payment):
+    # show one payment
     print("-" * 50)
     print(f"Payment ID  : {payment['payment_id']}")
     print(f"Member ID   : {payment['member_id']}")
@@ -50,6 +56,7 @@ def print_payment(payment):
 
 
 def print_payment_list(payments, title="Payments"):
+    # list of payments
     print_title(title)
     if not payments:
         print("No payments found.")
@@ -59,6 +66,7 @@ def print_payment_list(payments, title="Payments"):
 
 
 def print_attendance(record):
+    # show one attendance record
     print("-" * 50)
     print(f"Attendance ID: {record['attendance_id']}")
     print(f"Member ID    : {record['member_id']}")
@@ -69,6 +77,7 @@ def print_attendance(record):
 
 
 def print_attendance_list(attendance_list, title="Attendance Records"):
+    # list attendance
     print_title(title)
     if not attendance_list:
         print("No attendance records found.")
@@ -78,7 +87,7 @@ def print_attendance_list(attendance_list, title="Attendance Records"):
 
 
 def print_trainer_summary(members):
-    """Show trainer → assigned members, excluding expired members."""
+    # show members assigned to trainers (only if not expired)
     print_title("Trainer Assignment Summary")
 
     trainers = {}
@@ -102,12 +111,14 @@ def print_trainer_summary(members):
 
 
 def print_financial_summary(total_amount, count):
+    # simple financial summary
     print_title("Financial Summary")
     print(f"Number of payments: {count}")
     print(f"Total amount      : {total_amount:.2f}")
 
 
 def print_busiest_day_report(busiest_day, stats_dict):
+    # busiest day report
     print_title("Busiest Day of the Week (Attendance)")
     if not stats_dict:
         print("No attendance data available.")
@@ -122,6 +133,7 @@ def print_busiest_day_report(busiest_day, stats_dict):
 
 
 def print_revenue_by_membership_type(revenue_dict):
+    # revenue by membership type
     print_title("Revenue by Membership Type")
     if not revenue_dict:
         print("No payment data available.")
@@ -130,10 +142,9 @@ def print_revenue_by_membership_type(revenue_dict):
     for mtype, total in revenue_dict.items():
         print(f"{mtype:10} : {total:.2f}")
 
+
 def print_expiry_alert(expiring_members, days):
-    """
-    Print a short alert box for memberships expiring soon.
-    """
+    # alert for upcoming expirations
     print_title(f"Automatic Alert: Memberships expiring within {days} day(s)")
     if not expiring_members:
         print("No memberships are expiring in this period.")
@@ -142,4 +153,3 @@ def print_expiry_alert(expiring_members, days):
     print(f"{len(expiring_members)} member(s) found:")
     for m in expiring_members:
         print(f"- {m['member_id']} | {m['name']} | End Date: {m['end_date']}")
-

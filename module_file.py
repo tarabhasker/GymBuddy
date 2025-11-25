@@ -1,21 +1,22 @@
+# file handling module
 import os
 
+# file paths
 DATA_FOLDER = "data"
 MEMBERS_FILE = os.path.join(DATA_FOLDER, "members.txt")
 PAYMENTS_FILE = os.path.join(DATA_FOLDER, "payments.txt")
 ATTENDANCE_FILE = os.path.join(DATA_FOLDER, "attendance.txt")
 
-
+# create data folder if it doesnt exist
 def ensure_data_folder():
-    """Create data folder if it does not exist."""
     if not os.path.exists(DATA_FOLDER):
         os.makedirs(DATA_FOLDER)
 
 
-# ---------- MEMBERS ----------
+# MEMBERS 
 
 def load_members_from_file():
-    """Read members from text file and return as list of dicts."""
+    # read members from text file
     ensure_data_folder()
     members = []
 
@@ -29,7 +30,7 @@ def load_members_from_file():
                 continue
             fields = line.split(",")
             if len(fields) < 10:
-                continue 
+                continue  
             member = {
                 "member_id": fields[0],
                 "name": fields[1],
@@ -47,7 +48,7 @@ def load_members_from_file():
 
 
 def save_members_to_file(members):
-    """Write members list to text file."""
+    # write members to text file
     ensure_data_folder()
     with open(MEMBERS_FILE, "w", encoding="utf-8") as f:
         for m in members:
@@ -66,10 +67,10 @@ def save_members_to_file(members):
             f.write(line + "\n")
 
 
-# ---------- PAYMENTS ----------
+# PAYMENTS
 
 def load_payments_from_file():
-    """Read payments from text file and return as list of dicts."""
+    # read payments from text file
     ensure_data_folder()
     payments = []
 
@@ -97,7 +98,7 @@ def load_payments_from_file():
 
 
 def save_payments_to_file(payments):
-    """Write payments list to text file."""
+    # write payments to text file
     ensure_data_folder()
     with open(PAYMENTS_FILE, "w", encoding="utf-8") as f:
         for p in payments:
@@ -112,10 +113,10 @@ def save_payments_to_file(payments):
             f.write(line + "\n")
 
 
-# ---------- ATTENDANCE ----------
+#  ATTENDANCE 
 
 def load_attendance_from_file():
-    """Read attendance records from text file and return list of dicts."""
+    # read attendance from text file
     ensure_data_folder()
     attendance_list = []
 
@@ -142,7 +143,7 @@ def load_attendance_from_file():
 
 
 def save_attendance_to_file(attendance_list):
-    """Write attendance list to text file."""
+    # write attendance to text file
     ensure_data_folder()
     with open(ATTENDANCE_FILE, "w", encoding="utf-8") as f:
         for a in attendance_list:

@@ -1,3 +1,4 @@
+# import modules
 from module_file import (
     load_members_from_file,
     save_members_to_file,
@@ -43,15 +44,15 @@ from module_process import (
     get_member_attendance,
     get_attendance_on_date,
     get_attendance_in_range,
-    get_members_expiring_within_days,
     get_busiest_day_of_week,
     get_revenue_per_membership_type,
 )
 
-
+# list of membership types
 MEMBERSHIP_TYPES = ["Monthly", "Quarterly", "Yearly"]
 
 
+# member menu
 def member_management_menu(members, payments, attendance):
     while True:
         print_title("Member Management")
@@ -65,6 +66,7 @@ def member_management_menu(members, payments, attendance):
         choice = input_menu_choice("Enter choice: ", ["1", "2", "3", "4", "5", "6"])
 
         if choice == "1":
+            # add new member
             data = input_member_details(MEMBERSHIP_TYPES)
             member = add_member(members, data)
             save_members_to_file(members)
@@ -72,6 +74,7 @@ def member_management_menu(members, payments, attendance):
             print_member(member)
 
         elif choice == "2":
+            # view member by id
             member_id = input_non_empty("Enter Member ID: ").upper()
             member = find_member(members, member_id)
             if member:
@@ -80,6 +83,7 @@ def member_management_menu(members, payments, attendance):
                 print("Member not found.")
 
         elif choice == "3":
+            # update member details
             member_id = input_non_empty("Enter Member ID to update: ").upper()
             member = find_member(members, member_id)
             if not member:
@@ -115,9 +119,11 @@ def member_management_menu(members, payments, attendance):
                 print_member(updated_member)
 
         elif choice == "4":
+            # show all members
             print_member_list(members, "All Members")
         
         elif choice == "5":
+            # cancel membership (set status to expired)
             member_id = input_non_empty("Enter Member ID to cancel: ").upper()
             cancelled = cancel_membership(members, member_id)
             if cancelled:
@@ -128,9 +134,11 @@ def member_management_menu(members, payments, attendance):
                 print("Member not found.")
 
         elif choice == "6":
+            # back to main
             break
 
 
+# payment menu
 def payment_management_menu(members, payments):
     while True:
         print_title("Payment Management")
@@ -140,6 +148,7 @@ def payment_management_menu(members, payments):
         choice = input_menu_choice("Enter choice: ", ["1", "2", "3"])
 
         if choice == "1":
+            # add payment
             member_id = input_non_empty("Enter Member ID: ").upper()
             payment_data = input_payment_details()
             payment, member = record_payment(members, payments, member_id, payment_data)
@@ -153,14 +162,17 @@ def payment_management_menu(members, payments):
                 print_payment_list([payment], "Payment Recorded")
 
         elif choice == "2":
+            # show payment history for member
             member_id = input_non_empty("Enter Member ID: ").upper()
             member_payments = get_member_payments(payments, member_id)
             print_payment_list(member_payments, f"Payment History for {member_id}")
 
         elif choice == "3":
+            # back
             break
 
 
+# attendance menu
 def attendance_management_menu(members, attendance):
     while True:
         print_title("Attendance Management")
@@ -171,6 +183,7 @@ def attendance_management_menu(members, attendance):
         choice = input_menu_choice("Enter choice: ", ["1", "2", "3", "4"])
 
         if choice == "1":
+            # record new attendance
             member_id = input_non_empty("Enter Member ID: ").upper()
             member = find_member(members, member_id)
             if not member:
@@ -183,18 +196,23 @@ def attendance_management_menu(members, attendance):
                 print_attendance_list([record], "New Attendance")
 
         elif choice == "2":
+            # show attendance for one member
             member_id = input_non_empty("Enter Member ID: ").upper()
             records = get_member_attendance(attendance, member_id)
             print_attendance_list(records, f"Attendance for member {member_id}")
 
         elif choice == "3":
+            # show attendance for a date
             date_str = input_date("Enter date (YYYY-MM-DD): ")
             records = get_attendance_on_date(attendance, date_str)
             print_attendance_list(records, f"Attendance on {date_str}")
 
         elif choice == "4":
+            # back
             break
 
+
+# advanced analytics menu
 def advanced_analytics_menu(members, payments, attendance):
     while True:
         print_title("Advanced Analytics")
@@ -205,6 +223,7 @@ def advanced_analytics_menu(members, payments, attendance):
         choice = input_menu_choice("Enter choice: ", ["1", "2", "3", "4"])
 
         if choice == "1":
+            # use datetime to see who is expiring soon
             days_str = input_non_empty("Enter number of days from today: ")
             if not days_str.isdigit():
                 print("Please enter a valid positive number.")
@@ -217,17 +236,21 @@ def advanced_analytics_menu(members, payments, attendance):
             )
 
         elif choice == "2":
+            # show busiest day based on attendance
             busiest_day, stats = get_busiest_day_of_week(attendance)
             print_busiest_day_report(busiest_day, stats)
 
         elif choice == "3":
+            # show revenue by membership type
             revenue = get_revenue_per_membership_type(payments)
             print_revenue_by_membership_type(revenue)
 
         elif choice == "4":
+            # back to reports
             break
 
 
+# reports menu
 def reports_menu(members, payments, attendance):
     while True:
         print_title("Reports")
@@ -245,18 +268,22 @@ def reports_menu(members, payments, attendance):
                                     "6", "7", "8", "9"])
 
         if choice == "1":
+            # only active members
             active = get_active_members(members)
             print_member_list(active, "Active Members")
 
         elif choice == "2":
+            # expired members
             expired = get_expired_members(members)
             print_member_list(expired, "Expired Members")
 
         elif choice == "3":
+            # pending (no payment yet)
             pending = get_pending_members(members)
             print_member_list(pending, "Pending Members (Need Payment)")
 
         elif choice == "4":
+            # monthly payment report
             year = input_non_empty("Year (YYYY): ")
             month = input_non_empty("Month (MM): ")
             month_payments = get_payments_in_month(payments, year, month)
@@ -265,11 +292,13 @@ def reports_menu(members, payments, attendance):
             print_financial_summary(total, len(month_payments))
 
         elif choice == "5":
+            # attendance for one day
             date_str = input_date("Enter date (YYYY-MM-DD): ")
             records = get_attendance_on_date(attendance, date_str)
             print_attendance_list(records, f"Daily Attendance on {date_str}")
 
         elif choice == "6":
+            # attendance for a date range
             print("Enter week range (e.g. Monday–Sunday).")
             start_date = input_date("Start date (YYYY-MM-DD): ")
             end_date = input_date("End date   (YYYY-MM-DD): ")
@@ -280,27 +309,31 @@ def reports_menu(members, payments, attendance):
             )
 
         elif choice == "7":
+            # trainer summary (only non-expired)
             print_trainer_summary(members)
 
         elif choice == "8":
+            # go to advanced analytics menu
             advanced_analytics_menu(members, payments, attendance)
 
         elif choice == "9":
+            # back
             break
 
 
 def main():
-    # Load existing data 
+    # load existing data from files
     members = load_members_from_file()
     payments = load_payments_from_file()
     attendance = load_attendance_from_file()
 
-    # Expiry alert (if have)
-    DAYS_AHEAD = 7 
+    # show expiry alert at start (only if got members)
+    DAYS_AHEAD = 7
     expiring_soon = get_members_expiring_within_days(members, DAYS_AHEAD)
-    if expiring_soon:  
+    if expiring_soon:
         print_expiry_alert(expiring_soon, DAYS_AHEAD)
 
+    # main loop
     while True:
         print_main_menu()
         choice = input_menu_choice("Enter choice: ", ["1", "2", "3", "4", "5"])
@@ -314,6 +347,7 @@ def main():
         elif choice == "4":
             reports_menu(members, payments, attendance)
         elif choice == "5":
+            # save before exit
             print("Exiting program. Goodbye!")
             save_members_to_file(members)
             save_payments_to_file(payments)
